@@ -29,12 +29,22 @@ fix(scope): correct broken behavior
 chore(ci): update workflow configuration
 ```
 
+## DCO / Signed-off-by
+
+Type A and Type B repositories should normally enable DCO. If `.github/workflows/dco.yml` is present, every commit must contain a valid `Signed-off-by` trailer.
+
+```bash
+git commit -s -m "feat: my change"
+git config --global format.signoff true
+```
+
 ## Pull Request Checklist
 
 - [ ] Tests pass
 - [ ] Linting passes
 - [ ] Docs are updated if needed
 - [ ] New files include SPDX headers where applicable
+- [ ] Commits are signed off when DCO is enabled
 
 ## License Headers
 

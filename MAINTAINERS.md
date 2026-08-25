@@ -4,8 +4,8 @@
 
 | Name | GitHub | Affiliation | Areas |
 | --- | --- | --- | --- |
-| {{MAINTAINER_NAME_1}} | [@{{MAINTAINER_GITHUB_1}}](https://github.com/{{MAINTAINER_GITHUB_1}}) | {{AFFILIATION_1}} | npm publishing, releases |
-| {{MAINTAINER_NAME_2}} | [@{{MAINTAINER_GITHUB_2}}](https://github.com/{{MAINTAINER_GITHUB_2}}) | {{AFFILIATION_2}} | CI, security |
+| {{MAINTAINER_NAME_1}} | [@{{MAINTAINER_GITHUB_1}}](https://github.com/{{MAINTAINER_GITHUB_1}}) | {{AFFILIATION_1}} | {{AREAS_1}} |
+| {{MAINTAINER_NAME_2}} | [@{{MAINTAINER_GITHUB_2}}](https://github.com/{{MAINTAINER_GITHUB_2}}) | {{AFFILIATION_2}} | {{AREAS_2}} |
 
 ## Responsibilities
 
@@ -15,7 +15,7 @@ Maintainers are expected to:
 - Triage issues and discussions
 - Keep governance and security files current
 - Uphold the [Code of Conduct](CODE_OF_CONDUCT.md)
-- Coordinate releases and binary publication workflows
+- Coordinate releases or publication workflows as relevant for the repository type
 
 ## Becoming a Maintainer
 
