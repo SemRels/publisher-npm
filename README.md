@@ -32,13 +32,12 @@ docker pull ghcr.io/semrels/publisher-npm:latest
 
 ## Configuration
 
-semrel passes each `args:` entry to the plugin as `SEMREL_PLUGIN_<KEY>` (key uppercased, `-`/`.`/spaces replaced by `_`). Plugin variables already set in the process environment, for example by a CI workflow, work as well, and empty `args:` values are ignored.
+semrel passes each `args:` entry to the plugin as `SEMREL_PLUGIN_<KEY>` (key uppercased, `-`/`.`/spaces replaced by `_`). Plugin variables already set in the process environment, for example by a CI workflow, work as well, and empty `args:` values are ignored. Keep the token out of the config file: export `SEMREL_PLUGIN_NPM_TOKEN` from a secret in your CI workflow, or omit it and use OIDC (see below).
 
 ```yaml
 plugins:
   - uses: publisher-npm
     args:
-      npm_token: ${NPM_TOKEN}     # SEMREL_PLUGIN_NPM_TOKEN, omit for OIDC publishing
       npm_tag: latest             # SEMREL_PLUGIN_NPM_TAG
       npm_provenance: "true"      # SEMREL_PLUGIN_NPM_PROVENANCE
       npm_access: public          # SEMREL_PLUGIN_NPM_ACCESS
