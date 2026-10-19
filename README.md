@@ -32,7 +32,7 @@ docker pull ghcr.io/semrels/publisher-npm:latest
 
 ## Configuration
 
-semrel passes each `args:` entry to the plugin as `SEMREL_PLUGIN_<KEY>` (key uppercased, `-`/`.`/spaces replaced by `_`). Plugin variables already set in the process environment, for example by a CI workflow, work as well, and empty `args:` values are ignored. Keep the token out of the config file: export `SEMREL_PLUGIN_NPM_TOKEN` from a secret in your CI workflow, or omit it and use OIDC (see below).
+semrel passes each `args:` entry to the plugin as `SEMREL_PLUGIN_<KEY>` (key uppercased, `-`/`.`/spaces replaced by `_`). Plugin variables already set in the process environment, for example by a CI workflow, work as well, and empty `args:` values are ignored. Keep the token out of the config file: set `SEMREL_PLUGIN_NPM_TOKEN` from a secret in your CI workflow (see [GitHub Actions workflow](#github-actions-workflow)), or omit it and use OIDC.
 
 ```yaml
 plugins:
@@ -61,8 +61,25 @@ plugins:
       npm_tag: latest
       npm_provenance: "true"
       npm_access: public
-    # no token needed with OIDC, see below; otherwise export
-    # SEMREL_PLUGIN_NPM_TOKEN from a secret in your CI workflow
+    # token: set SEMREL_PLUGIN_NPM_TOKEN in the workflow env, or use OIDC
+```
+
+## GitHub Actions workflow
+
+Secrets belong in the workflow, not in `.semrel.yaml`. semrel passes its process environment on to plugins, so set the token on the step that runs semrel:
+
+```yaml
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write   # required for provenance and tokenless OIDC publishing
+    steps:
+      - uses: actions/checkout@v4
+      - run: semrel release
+        env:
+          SEMREL_PLUGIN_NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
 ## Tokenless publishing with OIDC
@@ -73,7 +90,7 @@ Requirements:
 
 - npm >= 11.5.1 on the runner.
 - A trusted publisher (repository and workflow filename) configured for each package on npmjs.com.
-- Leave `SEMREL_PLUGIN_NPM_TOKEN` unset (an empty value is ignored). If a token is set, it takes precedence.
+- Remove `SEMREL_PLUGIN_NPM_TOKEN` from the workflow `env` (an empty value is ignored). If a token is set, it takes precedence.
 
 ## `SEMREL_PLUGIN_*` variables
 
