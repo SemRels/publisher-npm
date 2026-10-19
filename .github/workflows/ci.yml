@@ -17,6 +17,11 @@ jobs:
   ci:
     name: Build, test, lint, and scan
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.go == '1.27rc1' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        go: ["1.25", "1.26", "1.27"]
 
     steps:
       - name: Check out repository
@@ -25,13 +30,15 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version-file: go.mod
+          go-version: ${{ matrix.go == '1.27rc1' && '1.27.0-rc.1' || format('{0}.x', matrix.go) }}
+          allow-prereleases: true
           cache: true
 
       - name: Download dependencies
         run: go mod download
 
       - name: Run golangci-lint
+        if: matrix.go != '1.27'
         uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
         with:
           version: v2.12.2
@@ -43,6 +50,7 @@ jobs:
         run: go tool cover -func=coverage.txt | tail -1
 
       - name: Upload coverage report
+        if: matrix.go == '1.26'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-report

@@ -1,6 +1,6 @@
 module github.com/SemRels/publisher-npm
 
-go 1.27.2
+go 1.25
 
 require github.com/stretchr/testify v1.12.1
 
