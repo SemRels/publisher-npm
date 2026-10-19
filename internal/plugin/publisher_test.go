@@ -96,6 +96,39 @@ func TestPlanPublishDryRunSkipsCommandLookup(t *testing.T) {
 	require.Equal(t, "1.2.3", plan.Package.Version)
 }
 
+func TestPlanPublishRequiresTokenWithoutOIDC(t *testing.T) {
+	t.Parallel()
+
+	dir := testDir(t)
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "package.json"), []byte(`{"name":"demo","version":"1.2.3"}`), 0o644))
+
+	deps := Dependencies{
+		LookPath:    func(string) (string, error) { return "npm", nil },
+		YarnVersion: func(context.Context) (string, error) { return "", nil },
+		ReadFile:    os.ReadFile,
+		Stat:        os.Stat,
+	}
+	config := Config{Version: "1.2.3", Tag: "latest", PackageFile: defaultPackageFile}
+
+	_, err := PlanPublish(context.Background(), dir, config, deps)
+	require.ErrorContains(t, err, "SEMREL_PLUGIN_NPM_TOKEN is required")
+
+	config.OIDC = true
+	plan, err := PlanPublish(context.Background(), dir, config, deps)
+	require.NoError(t, err)
+	require.NotContains(t, plan.Command.ExtraEnv, "NODE_AUTH_TOKEN")
+}
+
+func TestConfigFromEnvDetectsOIDC(t *testing.T) {
+	t.Parallel()
+
+	env := map[string]string{"SEMREL_VERSION": "1.2.3", "ACTIONS_ID_TOKEN_REQUEST_URL": "https://example.invalid/token"}
+	config, err := ConfigFromEnv(func(k string) string { return env[k] })
+	require.NoError(t, err)
+	require.True(t, config.OIDC)
+	require.Empty(t, config.Token)
+}
+
 func testDir(t *testing.T) string {
 	t.Helper()
 	dir, err := os.MkdirTemp(".", "publisher-npm-test-")

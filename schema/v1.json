@@ -7,7 +7,7 @@
   "properties": {
     "SEMREL_PLUGIN_NPM_TOKEN": {
       "type": "string",
-      "description": "npm registry auth token used to publish the package.",
+      "description": "npm registry auth token used to publish the package. Optional when an OIDC identity token is available (GitHub Actions with permissions.id-token: write) and npm trusted publishing is configured.",
       "writeOnly": true
     },
     "SEMREL_PLUGIN_NPM_TAG": {

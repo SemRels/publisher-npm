@@ -66,11 +66,21 @@ plugins:
       SEMREL_PLUGIN_NPM_ACCESS: public
 ```
 
+## Tokenless publishing with OIDC
+
+On GitHub Actions with `permissions: id-token: write`, the plugin does not need a token. When `ACTIONS_ID_TOKEN_REQUEST_URL` is set and `SEMREL_PLUGIN_NPM_TOKEN` is empty, `NODE_AUTH_TOKEN` is left unset and npm authenticates through [trusted publishing](https://docs.npmjs.com/trusted-publishers).
+
+Requirements:
+
+- npm >= 11.5.1 on the runner.
+- A trusted publisher (repository and workflow filename) configured for each package on npmjs.com.
+- Do not set `SEMREL_PLUGIN_NPM_TOKEN` (not even to an empty secret).
+
 ## `SEMREL_PLUGIN_*` variables
 
 | Name | Required | Description | Default |
 | --- | --- | --- | --- |
-| `SEMREL_PLUGIN_NPM_TOKEN` | Required unless `SEMREL_DRY_RUN=true` | npm auth token passed to the publish tool as `NODE_AUTH_TOKEN`. | _none_ |
+| `SEMREL_PLUGIN_NPM_TOKEN` | Required unless `SEMREL_DRY_RUN=true` or OIDC is available | npm auth token passed to the publish tool as `NODE_AUTH_TOKEN`. Omit it to publish with [npm trusted publishing](#tokenless-publishing-with-oidc). | _none_ |
 | `SEMREL_PLUGIN_NPM_TAG` | Optional | Dist-tag passed as `--tag <value>`. | `latest` |
 | `SEMREL_PLUGIN_NPM_PROVENANCE` | Optional | When `true`, appends `--provenance` to the publish command. | `false` |
 | `SEMREL_PLUGIN_NPM_ACCESS` | Optional | When set to `public` or `restricted`, appends `--access <value>`. Useful for scoped packages. | _unset_ |

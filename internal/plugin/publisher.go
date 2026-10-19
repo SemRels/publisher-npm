@@ -30,9 +30,13 @@ const (
 )
 
 type Config struct {
-	Version     string
-	DryRun      bool
-	Token       string
+	Version string
+	DryRun  bool
+	Token   string
+	// OIDC is true when the CI provider offers an OIDC identity token (GitHub
+	// Actions with `id-token: write`), which lets npm publish via trusted
+	// publishing without a token.
+	OIDC        bool
 	Tag         string
 	Provenance  bool
 	Access      string
@@ -137,6 +141,7 @@ func ConfigFromEnv(getenv func(string) string) (Config, error) {
 		Version:     strings.TrimPrefix(version, "v"),
 		DryRun:      dryRun,
 		Token:       strings.TrimSpace(getenv("SEMREL_PLUGIN_NPM_TOKEN")),
+		OIDC:        strings.TrimSpace(getenv("ACTIONS_ID_TOKEN_REQUEST_URL")) != "",
 		Tag:         defaultString(strings.TrimSpace(getenv("SEMREL_PLUGIN_NPM_TAG")), "latest"),
 		Provenance:  provenance,
 		Access:      access,
@@ -149,8 +154,8 @@ func PlanPublish(ctx context.Context, cwd string, config Config, deps Dependenci
 	if err != nil {
 		return Plan{}, err
 	}
-	if !config.DryRun && config.Token == "" {
-		return Plan{}, errors.New("SEMREL_PLUGIN_NPM_TOKEN is required unless SEMREL_DRY_RUN=true")
+	if !config.DryRun && config.Token == "" && !config.OIDC {
+		return Plan{}, errors.New("SEMREL_PLUGIN_NPM_TOKEN is required unless SEMREL_DRY_RUN=true or an OIDC identity token is available (GitHub Actions with permissions.id-token: write)")
 	}
 
 	command := BuildPublishCommand(manager, cwd, config)
