@@ -146,7 +146,7 @@ jobs:
         with:
           # go.mod keeps the minimum supported Go (1.25, which has no stdlib
           # security fixes); build release binaries with a patched toolchain.
-          go-version: 1.27.x
+          go-version: "1.27"
           cache: true
 
       - name: Build release binary
