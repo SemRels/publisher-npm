@@ -4,6 +4,7 @@
   "title": "publisher-npm plugin configuration",
   "description": "Schema v1 for the publisher-npm semrel plugin. Configure via SEMREL_* environment variables. Registered as \"publisher-npm\" (rather than the short name \"npm\") to avoid colliding with the updater-npm plugin, which is already registered as \"npm\".",
   "type": "object",
+  "x-semrel-dry-run": true,
   "properties": {
     "SEMREL_PLUGIN_NPM_TOKEN": {
       "type": "string",
