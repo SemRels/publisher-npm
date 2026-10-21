@@ -37,7 +37,8 @@ semrel passes each `args:` entry to the plugin as `SEMREL_PLUGIN_<KEY>` (key upp
 
 ```yaml
 plugins:
-  - uses: publisher-npm
+  - uses: "@semrel/publisher-npm"
+    phase: release
     args:
       npm_tag: latest             # SEMREL_PLUGIN_NPM_TAG
       npm_provenance: "true"      # SEMREL_PLUGIN_NPM_PROVENANCE
@@ -50,14 +51,16 @@ plugins:
 tagPrefix: "v"
 
 plugins:
-  - uses: condition-github-actions
+  - uses: "@semrel/condition-github-actions"
     phase: condition
 
-  - uses: updater-npm
+  - uses: "@semrel/updater-npm"
+    phase: pre-tag
     args:
       update_lockfile: "true"
 
-  - uses: publisher-npm
+  - uses: "@semrel/publisher-npm"
+    phase: release
     args:
       npm_tag: latest
       npm_provenance: "true"
@@ -93,14 +96,16 @@ Requirements:
 - A trusted publisher (repository and workflow filename) configured for each package on npmjs.com.
 - Remove `SEMREL_PLUGIN_NPM_TOKEN` from the workflow `env` (an empty value is ignored). If a token is set, it takes precedence.
 
-## `SEMREL_PLUGIN_*` variables
+## Options
 
-| Name | Required | Description | Default |
-| --- | --- | --- | --- |
-| `SEMREL_PLUGIN_NPM_TOKEN` | Required unless `SEMREL_DRY_RUN=true` or OIDC is available | npm auth token passed to the publish tool as `NODE_AUTH_TOKEN`. Omit it to publish with [npm trusted publishing](#tokenless-publishing-with-oidc). | _none_ |
-| `SEMREL_PLUGIN_NPM_TAG` | Optional | Dist-tag passed as `--tag <value>`. | `latest` |
-| `SEMREL_PLUGIN_NPM_PROVENANCE` | Optional | When `true`, appends `--provenance` to the publish command. | `false` |
-| `SEMREL_PLUGIN_NPM_ACCESS` | Optional | When set to `public` or `restricted`, appends `--access <value>`. Useful for scoped packages. | _unset_ |
+Every option can be set as an entry under `args` in `.semrel.yaml`. semrel passes each entry to the plugin as the environment variable shown in the table, so you can also set that variable directly (for example in your CI environment) instead of using `args`.
+
+| Argument | Environment variable | Required | Description | Default |
+| --- | --- | --- | --- | --- |
+| `npm_token` | `SEMREL_PLUGIN_NPM_TOKEN` | Required unless `SEMREL_DRY_RUN=true` or OIDC is available | npm auth token passed to the publish tool as `NODE_AUTH_TOKEN`. Omit it to publish with [npm trusted publishing](#tokenless-publishing-with-oidc). | _none_ |
+| `npm_tag` | `SEMREL_PLUGIN_NPM_TAG` | Optional | Dist-tag passed as `--tag <value>`. | `latest` |
+| `npm_provenance` | `SEMREL_PLUGIN_NPM_PROVENANCE` | Optional | When `true`, appends `--provenance` to the publish command. | `false` |
+| `npm_access` | `SEMREL_PLUGIN_NPM_ACCESS` | Optional | When set to `public` or `restricted`, appends `--access <value>`. Useful for scoped packages. | _unset_ |
 
 ## `SEMREL_*` release context used
 
