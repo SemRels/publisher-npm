@@ -3,7 +3,8 @@
 [![Latest Release](https://img.shields.io/github/v/release/SemRels/publisher-npm?label=version&color=blue)](https://github.com/SemRels/publisher-npm/releases/latest)
 [![CI](https://github.com/SemRels/publisher-npm/actions/workflows/ci.yml/badge.svg)](https://github.com/SemRels/publisher-npm/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/SemRels/publisher-npm)](LICENSE)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/SemRels/publisher-npm/badge)](https://securityscorecards.dev/viewer/?uri=github.com/SemRels/publisher-npm)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/SemRels/publisher-npm/badge)](https://scorecard.dev/viewer/?uri=github.com/SemRels/publisher-npm)
+[![REUSE status](https://api.reuse.software/badge/github.com/SemRels/publisher-npm)](https://api.reuse.software/info/github.com/SemRels/publisher-npm)
 
 `publisher-npm` is a semrel publisher plugin that runs `npm publish`, `pnpm publish`, `yarn npm publish`, or `yarn publish` after semrel has selected and written the release version.
 
