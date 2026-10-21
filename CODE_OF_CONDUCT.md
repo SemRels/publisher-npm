@@ -1,6 +1,6 @@
 # Code of Conduct
 
-publisher-npm is committed to providing a welcoming and harassment-free community.
+`publisher-npm` is committed to providing a welcoming and harassment-free community.
 
 ## Our Pledge
 
